@@ -9,8 +9,10 @@ public class Translator {
 		s = text;
 		s = s.substring(3);
 		char[] temp_1 = s.toCharArray();
+		boolean bb_1 = false;
 		if(temp_1[0] == "K".toCharArray()[0]){
 			s = s.substring(1);
+			bb_1 = true;
 		}
 		s = s.substring(1);
 		char[] temp_2 = s.toCharArray();
@@ -220,7 +222,12 @@ public class Translator {
 				b_2 = true;
 			}
 		}
-		s = s+"("+s_3+");";
+		s = s+"("+s_3+")";
+		if(bb_1){
+			s = s+" const;";
+		}else{
+			s = s+";";
+		}
 		auto.mFrame.output.setText(s);
 	}
 	
