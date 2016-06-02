@@ -4,6 +4,8 @@ public class Translator {
 	//_ZN4Item7setIconERKSsi Example
 	Auto auto;
 	String s;
+	Boolean shouldStopAtError = true;
+	String[] errors = {"[Error 1] Undefined symbol"};
 	public Translator(Auto auto,String text){
 		this.auto = auto;
 		s = text;
@@ -96,6 +98,7 @@ public class Translator {
 		String s_3 = "";
 		boolean b_1 = false;
 		boolean b_2 = false;
+		boolean error = false;
 		for(int i = 0; i<s_2.length(); i++){
 			if(s_2.toCharArray()[i] == "K".toCharArray()[0]){
 				b_1 = true;
@@ -117,6 +120,7 @@ public class Translator {
 						}
 					}
 					b_2 = true;
+					i++;
 				}
 			}
 			else if(s_2.toCharArray()[i] == "i".toCharArray()[0]){
@@ -170,7 +174,7 @@ public class Translator {
 				}
 				b_2 = true;
 			}
-			if(s_2.toCharArray()[i] == "a".toCharArray()[0]){
+			else if(s_2.toCharArray()[i] == "a".toCharArray()[0]){
 				if(b_1){
 					if(b_2){
 						s_3 = s_3+", const signed char&";
@@ -187,7 +191,7 @@ public class Translator {
 				}
 				b_2 = true;
 			}
-			if(s_2.toCharArray()[i] == "f".toCharArray()[0]){
+			else if(s_2.toCharArray()[i] == "f".toCharArray()[0]){
 				if(b_1){
 					if(b_2){
 						s_3 = s_3+", const float&";
@@ -204,7 +208,7 @@ public class Translator {
 				}
 				b_2 = true;
 			}
-			if(s_2.toCharArray()[i] == "b".toCharArray()[0]){
+			else if(s_2.toCharArray()[i] == "b".toCharArray()[0]){
 				if(b_1){
 					if(b_2){
 						s_3 = s_3+", const boolean&";
@@ -221,12 +225,19 @@ public class Translator {
 				}
 				b_2 = true;
 			}
+			else if(shouldStopAtError){
+				error = true;
+				s = errors[0]+" \""+s_2.toCharArray()[i]+"\"";
+				break;
+			}
 		}
-		s = s+"("+s_3+")";
-		if(bb_1){
-			s = s+" const;";
-		}else{
-			s = s+";";
+		if(!error){
+			s = s+"("+s_3+")";
+			if(bb_1){
+				s = s+" const;";
+			}else{
+				s = s+";";
+			}
 		}
 		auto.mFrame.output.setText(s);
 	}
